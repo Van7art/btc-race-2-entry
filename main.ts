@@ -68,6 +68,9 @@ function push(bar: Bar): void {
       if (rsiFirst.length === RSI_BARS) {
         rsiGain = rsiFirst.reduce((a, x) => a + (x > 0 ? x : 0), 0) / RSI_BARS;
         rsiLoss = rsiFirst.reduce((a, x) => a + (x < 0 ? -x : 0), 0) / RSI_BARS;
+        // Seeding is done: the array is never read again, so free it instead
+        // of letting it grow one entry per bar for the whole window.
+        rsiFirst.length = 0;
       }
     } else {
       rsiGain = (rsiGain * (RSI_BARS - 1) + (change > 0 ? change : 0)) / RSI_BARS;
